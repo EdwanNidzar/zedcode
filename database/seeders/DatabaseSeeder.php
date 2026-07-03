@@ -6,6 +6,9 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
+
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
@@ -15,11 +18,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Buat Roles
+        $superAdmin = Role::firstOrCreate(['name' => 'Super Admin']);
+        $hrManager = Role::firstOrCreate(['name' => 'HR / Manager']);
+        $employee = Role::firstOrCreate(['name' => 'Employee']);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Buat Super Admin
+        $user = User::firstOrCreate([
+            'email' => 'admin@zedcore.test',
+        ], [
+            'name' => 'Super Admin',
+            'password' => Hash::make('password'),
         ]);
+
+        $user->assignRole($superAdmin);
     }
 }
