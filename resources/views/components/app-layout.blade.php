@@ -358,6 +358,8 @@
             .app-layout { grid-template-columns: 1fr; }
             .sidebar { display: none; /* Needs mobile menu implementation */ }
         }
+
+        .hidden { display: none !important; }
     </style>
     @livewireStyles
 </head>
@@ -400,7 +402,26 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                     Handbook
                 </a>
+            </nav>
 
+            <p style="font-size: 11px; font-family: 'figmaMono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin: 24px 16px 8px; color: var(--muted);">PEGAWAI</p>
+            <nav class="sidebar-nav">
+                <a href="{{ route('profile') }}" class="nav-item {{ request()->routeIs('profile') ? 'active' : '' }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    Profil Saya
+                </a>
+                <a href="{{ route('leave.request') }}" class="nav-item {{ request()->routeIs('leave.request') ? 'active' : '' }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    Pengajuan Cuti
+                </a>
+                <a href="{{ route('leave.approvals') }}" class="nav-item {{ request()->routeIs('leave.approvals') ? 'active' : '' }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    Approval Center
+                </a>
+            </nav>
+
+            <p style="font-size: 11px; font-family: 'figmaMono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin: 24px 16px 8px; color: var(--muted);">ADMIN & HR</p>
+            <nav class="sidebar-nav">
                 @if(auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('HR / Manager'))
                 <div class="nav-label">Admin Panel</div>
                 <a href="{{ route('admin.users.index') }}" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
@@ -412,6 +433,13 @@
                     Kelola Role & Akses
                 </a>
                 @endif
+                
+                @can('manage_approval_chains')
+                <a href="{{ route('admin.approval-chains.index') }}" class="nav-item {{ request()->routeIs('admin.approval-chains.*') ? 'active' : '' }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="12" cy="19" r="2"/><line x1="7" y1="12" x2="10" y2="12"/><line x1="14" y1="12" x2="17" y2="12"/><line x1="12" y1="7" x2="12" y2="10"/><line x1="12" y1="14" x2="12" y2="17"/></svg>
+                    Rantai Approval
+                </a>
+                @endcan
             </nav>
         </aside>
 
@@ -425,6 +453,43 @@
                 </div>
 
                 <div class="topbar-right">
+                    {{-- Notifications --}}
+                    @php
+                        $unreadNotifications = auth()->user()->unreadNotifications;
+                    @endphp
+                    <div style="position: relative; margin-right: 16px; cursor: pointer;" onclick="document.getElementById('notif-dropdown').classList.toggle('hidden')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; color: var(--muted);"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        @if($unreadNotifications->count() > 0)
+                            <span style="position: absolute; top: -4px; right: -4px; background: var(--error); color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                {{ $unreadNotifications->count() }}
+                            </span>
+                        @endif
+                        
+                        {{-- Dropdown --}}
+                        <div id="notif-dropdown" class="hidden" style="position: absolute; top: 32px; right: 0; background: white; border: 1px solid var(--hairline); border-radius: var(--radius-lg); width: 300px; box-shadow: var(--shadow-lg); z-index: 100;">
+                            <div style="padding: 12px 16px; border-bottom: 1px solid var(--hairline); display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 13px; font-weight: 600;">Notifikasi</span>
+                                @if($unreadNotifications->count() > 0)
+                                    <form method="POST" action="{{ route('notifications.readAll') }}" style="margin: 0;">
+                                        @csrf
+                                        <button type="submit" style="font-size: 11px; color: var(--block-navy); background: none; border: none; cursor: pointer; text-decoration: underline;">Tandai Semua Dibaca</button>
+                                    </form>
+                                @endif
+                            </div>
+                            <div style="max-height: 300px; overflow-y: auto;">
+                                @forelse(auth()->user()->notifications as $notification)
+                                    <a href="{{ $notification->data['url'] ?? '#' }}" style="display: block; padding: 12px 16px; border-bottom: 1px solid var(--hairline-soft); text-decoration: none; color: var(--ink); background: {{ $notification->read_at ? 'transparent' : '#f0f9ff' }}; transition: background 0.2s;">
+                                        <div style="font-size: 12px; font-weight: {{ $notification->read_at ? '500' : '700' }};">{{ $notification->data['title'] }}</div>
+                                        <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">{{ $notification->data['message'] }}</div>
+                                        <div style="font-size: 10px; color: var(--muted); margin-top: 6px;">{{ $notification->created_at->diffForHumans() }}</div>
+                                    </a>
+                                @empty
+                                    <div style="padding: 24px; text-align: center; font-size: 12px; color: var(--muted);">Belum ada notifikasi.</div>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="user-profile">
                         @php
                             $name = auth()->user()->name;
