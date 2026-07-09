@@ -14,6 +14,9 @@ Route::middleware(['auth'])->group(function () {
     // User Profile Route
     Route::get('/profile', \App\Livewire\Profile\UserProfile::class)->name('profile');
 
+    // Handbook Routes (accessible by all authenticated users)
+    Route::get('/handbook', \App\Livewire\Handbook\HandbookReader::class)->name('handbook.index');
+
     // Leave Routes (Accessible by authenticated users)
     Route::get('/leave/request', \App\Livewire\Leave\LeaveRequestForm::class)->name('leave.request');
     Route::get('/leave/approvals', \App\Livewire\Leave\ApprovalManager::class)->name('leave.approvals');
@@ -39,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'update'])->name('users.update');
         Route::delete('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
         Route::get('/roles', \App\Livewire\Admin\RoleManagement::class)->name('roles.index');
+        Route::get('/handbook', \App\Livewire\Handbook\HandbookManager::class)->name('handbook.index');
     });
 
     // Approval Chains Route (Requires specific permission)

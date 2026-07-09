@@ -118,5 +118,8 @@ class DatabaseSeeder extends Seeder
 
         // Seed konfigurasi rantai approval default
         $this->call(ApprovalChainConfigSeeder::class);
+
+        // Seed konten handbook Zedpos
+        $this->call(HandbookSeeder::class);
     }
 }
