@@ -39,7 +39,7 @@ RUN mkdir -p storage/framework/sessions storage/framework/views storage/framewor
 # ============================================================
 # Stage 3: Production image (PHP 8.3-FPM + Nginx + Supervisor)
 # ============================================================
-FROM php:8.3-fpm-alpine AS production
+FROM php:8.4-fpm-alpine AS production
 
 LABEL maintainer="Zedcore Team"
 LABEL org.opencontainers.image.description="Zedcore - Web App Cuti & Handbook SOP"
