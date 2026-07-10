@@ -1,0 +1,54 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Development tools
+.agents
+.github
+.vscode
+.idea
+.cursor
+.zed
+.editorconfig
+
+# Dependencies (rebuilt in Docker)
+node_modules
+vendor
+
+# Environment files (injected via Easypanel env vars)
+.env
+.env.*
+!.env.example
+
+# Compiled assets (rebuilt in Docker)
+public/hot
+public/storage
+
+# Logs & cache
+storage/logs/*.log
+storage/framework/cache
+storage/framework/sessions
+storage/framework/views
+bootstrap/cache/*.php
+
+# Tests
+tests
+phpunit.xml
+.phpunit.result.cache
+.phpunit.cache
+
+# Docker config itself
+# (Removed docker from ignore list because it's needed in build context)
+docker-compose*.yml
+
+# Misc
+*.md
+README.md
+Homestead.*
+_ide_helper.php
+Thumbs.db
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
