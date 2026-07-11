@@ -23,7 +23,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['requester_level', 'approver_role']);
-            $table->index(['requester_level', 'is_active', 'step_order']);
+            $table->index(['requester_level', 'is_active', 'step_order'], 'acc_level_active_order_idx');
         });
     }
 
