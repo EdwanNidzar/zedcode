@@ -16,7 +16,7 @@
 node_modules
 vendor
 
-# Environment files (injected via Easypanel env vars)
+# Environment files (injected via Hostinger env vars or .env on server)
 .env
 .env.*
 !.env.example
