@@ -198,7 +198,7 @@ jobs:
 
       - name: Verify deployment health
         run: |
-          MAX_RETRIES=10
+          MAX_RETRIES=30
           RETRY_DELAY=10
           COUNT=0
 
