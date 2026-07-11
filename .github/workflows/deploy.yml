@@ -100,7 +100,7 @@ jobs:
         run: php artisan migrate --force
 
       - name: Run PHPUnit tests
-        run: php artisan test --parallel
+        run: php artisan test
 
   # ──────────────────────────────────────────────
   # Job 2: Build & Push Docker Image to GHCR
